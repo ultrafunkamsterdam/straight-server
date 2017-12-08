@@ -180,7 +180,7 @@ module StraightServer
     # for them (unless they are also expired). This is for cases when the server was shut down,
     # but some orders statuses are not resolved.
     def resume_tracking_active_orders!
-      StraightServer::Order.where('status < 2').each do |order|
+      StraightServer::Order.where(Sequel.lit("status < 2")).each do |order|
 
         # Order is expired, but status is < 2! Suspcicious, probably
         # an unclean shutdown of the server. Let's check and update the status manually once.
