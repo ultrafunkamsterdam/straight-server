@@ -6,7 +6,7 @@ source 'https://rubygems.org' do
     gem 'logstash-logger', github: 'dwbutler/logstash-logger', ref: '621ba20862424f3993c620fc4b1fb0bf819da9e1' # https://github.com/dwbutler/logstash-logger/pull/54
   end
   gem 'pg'
-  gem 'satoshi-unit', '== 0.1.8'
+  gem 'satoshi-unit', '0.1.8'
   gem 'goliath'
   gem 'faye-websocket'
   gem 'socket.io-client-simple'
