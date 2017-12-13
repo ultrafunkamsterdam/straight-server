@@ -66,6 +66,19 @@ In `Gemfile` add a `path:` to use `gem` 'straight' locally too:
 
 Usage
 -----
+**bugfix**
+please comment (put # before first character) or remove the following lines from lib/straight/faraday_monkeypatch.rb like so:
+```
+#Faraday::SSLOptions = Faraday::Options.new(*(Faraday::SSLOptions.members | [:verify_callback])) do
+#  def verify?
+#    verify != false
+#  end
+#  def disable?
+#    !verify?
+#  end
+#end
+```
+
 When the server is running, you can access it via http and use its RESTful API.
 Below we assume it runs on localhost on port 9696.
 
