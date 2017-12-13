@@ -4,7 +4,7 @@ gateways_source: config
 
 # Used for:
 # - scoping Redis keys
-environment: development
+environment: production
 
 # When you display a payment window to a user, he has some time to pay. But what if a
 # transaction has been made in the last seconds and Straight didn't have time to detect it?
@@ -28,15 +28,15 @@ count_orders: true
 # For example, if user's cat makes more than 21 new orders during 60 seconds (from the same IP and Widget),
 # any user with this IP will be unable to create more orders via this Widget during those 60 seconds
 # Additionally, you can block new orders creation via any Widget from throttled IP for 300 seconds
-#throttle:
-#  requests_limit: 21
-#  period: 60           # in seconds
-#  ip_ban_duration: 300 # in seconds
+throttle:
+  requests_limit: 21
+  period: 60           # in seconds
+  ip_ban_duration: 300 # in seconds
 
 # Path to certificates and private key for BIP70 protocol. Uncomment this and provide
 # it to send payment requests to wallets.
-#ssl_certificate_path: '/path/to/ssl_certificate'
-#private_key_path: '/path/to/private_key'
+# ssl_certificate_path: '/etc/letsencrypt/live/api.execfast.nl/cert.pem'
+# private_key_path: '/etc/letsencrypt/live/api.execfast.nl'
 
 redis:
   host: localhost
@@ -46,16 +46,16 @@ redis:
 
 gateways:
   default:
-    pubkey: xpub-xxx # <- TODO: change this to your BIP32 pubkey
+    pubkey: xpub....
     confirmations_required: 0
     order_class: "StraightServer::Order"
     secret: 'secret'
-    check_signature: false
-    merchant_url: 'http://localhost:3000/my_shop'
-    callback_url: 'http://localhost:3000/my_app/payment_callback'
-    default_currency: 'BTC'
+    check_signature: true
+    #merchant_url: 'http://localhost:3000/my_shop'
+    callback_url: 'http://localhost:3000/my_callback_url'
+    default_currency: 'EUR'
     orders_expiration_period: 600 # seconds
-    after_payment_redirect_to: 'http://localhost:3000/my_app/my_own_page'
+    #after_payment_redirect_to: 'http://localhost:3000/my_app/my_own_page'
     auto_redirect: false
 
     # address_provider: 'Bip32'
@@ -84,38 +84,23 @@ gateways:
     # it will keep checking on the existing ones.
     active: true
     # If this option set to true, gateway using TESTNET
-    test_mode: true
+    test_mode: false
 
 # These adapters are used to query the blockchain. If the first one fails, the second one is tried and
 # so on. The adapters are generally looked up as subclasses of Straight::Blockchain::Adapter
 # but you are free to create your own and put a fully qualified class name below. The order is,
 # of course, important.
 blockchain_adapters:
-  # Uses Straight::Blockchain::BlockchainInfoAdapter
-  BlockchainInfo:
-  # Uses Straight::Blockchain::MyceliumAdapter
-  Mycelium:
-  # Uses Straight::Blockchain::InsightAdapter
-  Insight:
-    # If Insight adapter is enabled, it is necessary to provide a url for it.
-    mainnet_url:
-      - 'https://localhost/api'
-    # You can also set a testnet insight url to use:
-    testnet_url:
-      - 'https://test.localhost/api'
-    # Websocket Insight Url
-    # Uncomment it and put real Insight server address, for using fast transaction tracking. It works only
-    # for gateways and orders without confirmation required (eq to 0).
-    websocket_url:
-      - 'wss://localhost'
-  # Uses Straight::Blockchain::ChainComAdapter
-  ChainCom:
-    api_key_id: my_chain_com_api_key_id
+  - BlockchainInfo # uses Straight::Blockchain::BlockchainInfoAdapter
+  - Mycelium # uses Straight::Blockchain::MyceliumAdapter
+  # - InsightAdapter # uses Straight::Blockchain::InsightAdapter 
+  # - ChainCom #  Uses Straight::Blockchain::ChainComAdapter
+  #  api_key_id: my_chain_com_api_key_id
   # Uses your custom adapter
   # MyCustomClass::MyCustomBlockchainAdapter:
 
 logmaster:
-  log_level: INFO # Wise to change to WARN for production
+  log_level: DEBUG # Wise to change to WARN for production
   file: straight.log
   raise_exception: false
   name: Straight server logger
