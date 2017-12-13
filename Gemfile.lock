@@ -7,7 +7,7 @@ GIT
       concurrent-ruby
       faraday
       httparty (~> 0.13.5)
-      satoshi-unit (~> 0.1)
+      satoshi-unit (0.1.8)
 
 GEM
   remote: https://rubygems.org/
